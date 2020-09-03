@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    测试
+    <!-- <form-libs></form-libs> -->
+    <shuttleTable></shuttleTable>
   </div>
 </template>
 
@@ -12,3 +13,10 @@ export default {
   name: 'Home',
 }
 </script>
+
+<style lang="scss" scoped>
+html,body,p{
+  margin:0;
+  padding:0;
+}
+</style>
