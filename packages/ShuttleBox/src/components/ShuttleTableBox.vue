@@ -1,7 +1,7 @@
 <template>
   <div class="shuttle-column">
     <h1>表格式穿梭框</h1>
-    <p class="btns" v-if="ifUseClearBtn"><el-button @click="handlerClearClick">清除</el-button></p>
+    <p class="btns" v-if="$attrs.needClear"><el-button @click="handlerClearClick">清除</el-button></p>
     <div class="transfer-colomn">
       <div class="transfer-colomn-left" :style="{'width': ltWidth}">
         <el-table
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import shuttleDate from '../../../../examples/mock/shuttleData.json'
+// import shuttleDate from '../../../../examples/mock/shuttleData.json'
 export default {
   data () {
     return {
@@ -80,7 +80,7 @@ export default {
       tableShowName: {  // 表格标题显示内容参数替换
         label: 'label'
       },
-      rowKeyName: 'labtestIndexCode', // 穿梭列表的关键字
+      rowKeyName: this.$attrs.only, // 穿梭列表的关键字
       rightListHeader: [
         {
           label: '服务代码',
@@ -134,6 +134,11 @@ export default {
       default: false
     }
   },
+  // computed: {
+  //   originDate () {
+  //     return this.originShuttleDate
+  //   }
+  // },
   watch: {
     // 编辑时穿梭框初始化
     quotaListGet: {
@@ -174,7 +179,7 @@ export default {
         this.searchDate = {}
         this.originDate = []
         this.pageNo = 0
-        this.originDate = shuttleDate.data// 获取检验字典列表
+        // this.originDate = shuttleDate.data// 获取列表
         // 高亮显示已选择的检验指标
         this.shuttledDate = this.quotaListGet
         this.checkedQuotaList = this.quotaListGet
@@ -226,7 +231,9 @@ export default {
     }
   },
   created () {
-    this.originDate = shuttleDate.data
+    this.originDate = this.$attrs.isShowDateList
+    // this.ifUseClearBtn = this.$attrs.needClear
+    console.log(this.$attrs)
     setTimeout(()=>{ if(this.ifUseScroll) this.tableListScroll() })
   },
   methods: {
@@ -270,6 +277,17 @@ export default {
     handeleAddQuotaClick () {
       this.$emit('comfirmAddQuota', this.shuttledDate)
     },
+    // 对象数组去重
+    objectArrayReset(arr, val) {
+      let result = []
+      let obj = []
+      result = arr.reduce(function (prev, cur) {
+        // console.log(prev, cur, index, arr, obj) // index-索引，arr-索引
+        obj[cur[val]] ? '' : obj[cur[val]] = true && prev.push(cur)
+        return prev
+      }, [])
+      return result
+    },
     // 穿梭至右侧
     handleTransferRightClick () {
       let arr = JSON.parse(JSON.stringify(this.originDate))
@@ -284,7 +302,7 @@ export default {
       }
       this.originDate = arr
       this.hasTransferedList = this.hasTransferedList.concat(this.checkedQuotaList)
-      this.shuttledDate = Array.from(new Set(this.hasTransferedList))
+      this.shuttledDate = this.objectArrayReset(this.hasTransferedList, this.rowKeyName)
       // console.log(this.shuttledDate, this.hasTransferedList, 'dddddd')
     },
     // 穿梭返回
@@ -316,24 +334,28 @@ export default {
     },
     // 选择行发生变化
     handleCurrentRowClick (row, column) {
-     // this.checkedQuotaList = []
-      let checkedArr = []
-      let curCheckedList = this.shuttledDate.filter(item=>item[this.rowKeyName] === row[this.rowKeyName])
-      if(curCheckedList.length > 0) {
-        row.hasCheck = true
-      } else {
-        row.hasCheck = false
-      }
-      if (!row.hasCheck) {
-        row.hasCheck = true
-        checkedArr.push(row)
-      }
-      this.checkedQuotaList = this.checkedQuotaList.concat(checkedArr)
-      console.log(column, row)
+      let curCheckedList = []
+      this.originDate.map(item=>{
+        // item.hasCheck = false
+        this.shuttledDate.map(info=>{
+          if(item[this.rowKeyName] === info[this.rowKeyName]) item.hasCheck = true
+          if(info[this.rowKeyName] === row[this.rowKeyName]) curCheckedList.push(info)
+        })
+      })
+      if (!row.hasCheck) { row.hasCheck = true }
+      this.checkedQuotaList = []
+      this.checkedQuotaList = this.originDate.filter(item=>item.hasCheck)
+      console.log(column, row, this.checkedQuotaList)
     },
     // 批量选择指标
     handleSelectionChange (arr) {
       this.checkedQuotaList = []
+      this.originDate.map(item=>{
+        arr.map(info=>{
+          info.hasCheck =  true
+          if(item[this.rowKeyName] === info[this.rowKeyName]) item.hasCheck = true
+        })
+      })
       this.checkedQuotaList = arr
     },
     // 批量撤回
@@ -350,7 +372,7 @@ export default {
       let arr = []
       arr.push(row)
       this.hasTransferedList = this.hasTransferedList.concat(arr)
-      this.shuttledDate = Array.from(new Set(this.hasTransferedList))
+      this.shuttledDate = this.objectArrayReset(this.hasTransferedList, this.rowKeyName)
     },
     // 双击穿梭返回
     handleDbRebackRowClick (row) {

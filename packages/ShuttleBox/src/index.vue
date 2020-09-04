@@ -1,6 +1,6 @@
 <template>
   <div>
-    <lShuttleBox></lShuttleBox>
+    <lShuttleBox v-bind="$attrs" v-on="$listeners"></lShuttleBox>
   </div>
 </template>
 
