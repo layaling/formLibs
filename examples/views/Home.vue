@@ -5,6 +5,13 @@
       :originShuttleDate="shuttleTableList"
       :ifNeedClear="ifNeedClearFlag"
       :keyValue="keyName"
+      :tableHeight="tbHeight"
+      :rtWidth="rWidth"
+      :ltWidth="lWidth"
+      :lTableHeader="lTableHeaderList"
+      :rTableHeader="rTableHeaderList"
+      :tableShowName="tableShow"
+      @change="checkedShuttleDates"
     ></shuttleTable>
   </div>
 </template>
@@ -19,7 +26,35 @@ export default {
     return {
       shuttleTableList: shuttleDate.data, // 表格原始数据
       ifNeedClearFlag: true, // 是否需要清除按钮
-      keyName: 'labtestIndexCode' // 唯一关键字标志
+      keyName: 'labtestIndexCode', // 唯一关键字标志
+      tbHeight: '520', // 表格高度
+      rWidth: '400px', // 右侧穿梭框宽度
+      lWidth: '400px', // 左侧穿梭框宽度
+      lTableHeaderList: [ // 穿梭框左侧表头信息
+        {
+          label: '服务代码',
+          width: '120',
+          key: 'labtestIndexCode'
+        }, {
+          label: '服务名称',
+          width: '210',
+          key: 'labtestIndexName'
+        }
+      ], // 左侧穿梭框表头显示
+      rTableHeaderList: [ // 穿梭框右侧表头信息
+        {
+          label: '服务代码',
+          width: '120',
+          key: 'labtestIndexCode'
+        }, {
+          label: '服务名称',
+          width: '210',
+          key: 'labtestIndexName'
+        }
+      ],
+      tableShow: { // 表格标题显示内容参数替换
+        label: 'label'
+      }
     }
   },
   created() {
@@ -28,6 +63,10 @@ export default {
     this.testEvery()
   },
   methods:{
+    // 获取到的选中项
+    checkedShuttleDates(arr) {
+      console.log(arr, '选中项传出')
+    },
     // 对象数组取并集
     test() {
       const arr1 = [{ name: 'name1', id: 1 }, { name: 'name2', id: 2 }, { name: 'name3', id: 3 }]

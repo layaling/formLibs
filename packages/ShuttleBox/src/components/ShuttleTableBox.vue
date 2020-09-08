@@ -74,35 +74,13 @@
 export default {
   data () {
     return {
-      tableHeight: '520', // 表格高度
-      rtWidth: '400px', // 右侧表格宽度
-      ltWidth: '400px', // 左侧表格宽度
-      tableShowName: {  // 表格标题显示内容参数替换
-        label: 'label'
-      },
+      tableHeight: this.$attrs.tHeight, // 表格高度
+      rtWidth: this.$attrs.rWidth, // 右侧表格宽度
+      ltWidth: this.$attrs.lWidth, // 左侧表格宽度
+      tableShowName: this.$attrs.conTableShow,  // 表格标题显示内容参数替换,
       rowKeyName: this.$attrs.only, // 穿梭列表的关键字
-      rightListHeader: [
-        {
-          label: '服务代码',
-          width: '120',
-          key: 'labtestIndexCode'
-        }, {
-          label: '服务名称',
-          width: '180',
-          key: 'labtestIndexName'
-        },
-      ],
-      leftListHeader: [
-        {
-          label: '服务代码',
-          width: '120',
-          key: 'labtestIndexCode'
-        }, {
-          label: '服务名称',
-          width: '210',
-          key: 'labtestIndexName'
-        }
-      ],
+      rightListHeader: this.$attrs.rTableHeaderList, // 右侧表头内容显示
+      leftListHeader: this.$attrs.lTableHeaderList, // 左侧表头内容显示
       dateLoading: false,
       originDate: [],
       shuttledDate: [],

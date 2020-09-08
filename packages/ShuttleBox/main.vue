@@ -4,6 +4,13 @@
     :isShowDateList="isShowDateList"
     :needClear="ifNeedClear"
     :only="keyValue"
+    :tHeight="tableHeight"
+    :rWidth="rtWidth"
+    :lWidth="ltWidth"
+    :lTableHeaderList="lTableHeader"
+    :rTableHeaderList="rTableHeader"
+    :conTableShow="tableShowName"
+    @curCheckedShuttleDates="checkedShuttleDates"
     />
   </div>
 </template>
@@ -28,6 +35,42 @@ export default {
       default: ()=>{
         return ''
       }
+    },
+    tableHeight: {
+      type: String,
+      default: ()=>{
+        return ''
+      }
+    },
+    rtWidth: {
+      type: String,
+      default: ()=>{
+        return ''
+      }
+    },
+    ltWidth: {
+      type: String,
+      default: ()=>{
+        return ''
+      }
+    },
+    lTableHeader: {
+      type: Array,
+      default: ()=>{
+        return []
+      }
+    },
+    rTableHeader: {
+      type: Array,
+      default: ()=>{
+        return []
+      }
+    },
+    tableShowName: {
+      type: Object,
+      default: ()=>{
+        return {}
+      }
     }
   },
   data () {
@@ -37,10 +80,16 @@ export default {
   },
   created() {
     this.isShowDateList = this.originShuttleDate
-    console.log(this.keyValue, 'sksk')
+    console.log(this.tableHeight, this.rtWidth, 'sksk')
   },
   components:{
     shuttleBox
+  },
+  methods: {
+    // 穿梭框选中的数组
+    checkedShuttleDates(arr) {
+      this.$emit('change', arr)
+    }
   }
 }
 </script>
